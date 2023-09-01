@@ -1,25 +1,35 @@
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import Wrapper from './style'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import axios from 'axios'
 
 const Login = () => {
     const [user, setUser] = useState({
-        name: "", email: "", password: ""
+        email: "", password: ""
     })
+    const navigate = useNavigate()
 
-    const Login = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault()
-        console.log(user)
-        setUser({
-            name: "", email: "", password: ""
+        axios.post("http://localhost:8000/auth/login", user)
+        .then((res) => {
+            message.success("User logged in successfully")
+            localStorage.setItem("token", res.data.access_token)
+            navigate("/")
+        }).catch((err) => {
+            message.error(err.response.data.message)
+        }).finally(() => {
+            setUser({
+                email: "", password: ""
+            })
         })
     }
 
 
     return (
         <Wrapper>
-            <form onSubmit={Login} >
+            <form onSubmit={handleSubmit} >
                 <h1>SMP - <span className='heading'>Login</span></h1>
                 <hr />
                 <label htmlFor=""> Email
@@ -41,7 +51,6 @@ const Login = () => {
                     />
                 </label>
                 <Button type='primary' htmlType='submit' >Login</Button>
-
                 <span>
                     Don't have an account? <Link to="/register">Register</Link>
                 </span>

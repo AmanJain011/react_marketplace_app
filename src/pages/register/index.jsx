@@ -1,25 +1,34 @@
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import Wrapper from './style'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import axios from 'axios'
 
 const Register = () => {
     const [user, setUser] = useState({
         name: "", email: "", password: ""
     })
+    const navigate = useNavigate()
 
-    const register = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log(user)
-        setUser({
-            name: "", email: "", password: ""
-        })
+        axios.post("http://localhost:8000/auth/register", user)
+            .then((res) => {
+                message.success(res?.data?.message)
+                navigate("/login")
+            }).catch(({ response }) => {
+                message.error(response?.data?.message)
+            }).finally(() => {
+                setUser({
+                    name: "", email: "", password: ""
+                })
+            })
     }
 
 
     return (
         <Wrapper>
-            <form onSubmit={register} >
+            <form onSubmit={handleSubmit} >
                 <h1>SMP - <span className='heading'>REGISTER</span></h1>
                 <hr />
                 <label htmlFor=""> Name
@@ -50,7 +59,6 @@ const Register = () => {
                     />
                 </label>
                 <Button type='primary' htmlType='submit' >Register</Button>
-
                 <span>
                     Already have an account? <Link to="/login">Login</Link>
                 </span>
