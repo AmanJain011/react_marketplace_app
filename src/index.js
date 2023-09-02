@@ -11,16 +11,3 @@ root.render(
     </ConfigProvider>
   </React.StrictMode>
 );
-
-
-// theme={{
-//   components: {
-//     Button: {
-//       colorPrimary: '#05386B',
-//       colorPrimaryHover: '#05386B',
-//     }
-//   },
-//   token: {
-//     colorPrimary: '#05386B',
-//   },
-//  }}
